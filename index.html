@@ -3,109 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>车牌归属地查询</title>
+    <title>搜索列表</title>
     <style>
-        /* 基础样式 */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
             box-sizing: border-box;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        a {
+            text-decoration: none;
+            color: black;
         }
         h1 {
             text-align: center;
         }
-        
-        /* 表单样式 */
-        .form-container {
-            background-color: #f0f0f0;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .form-container input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .form-container input[type="submit"] {
-            width: 100%;
-            background-color: #4CAF50; /* 绿色 */
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .form-container input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-        
-        /* 结果样式 */
-        #result {
-            color: red; /* 红色字体 */
-            margin-top: 10px;
-        }
-        
-        /* 响应式布局 */
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            h1 {
-                font-size: 1.5em;
-            }
-            .form-container input[type="text"],
-            .form-container input[type="submit"] {
-                font-size: 0.9em;
-            }
-        }
     </style>
 </head>
 <body>
-    <h1>车牌归属地查询</h1>
-    <div class="form-container">
-        <form id="plateForm">
-            <input type="text" id="plateNumber" name="plateNumber" placeholder="请输入车牌号码" required>
-            <input type="submit" value="查询">
-        </form>
-    </div>
-    <div id="result"></div>
-
+    <h1><a href="index.html">设计工具</a></h1>
+    <input type="text" id="searchInput" placeholder="搜索...">
+    <button onclick="search()">搜索</button>
+    <ul id="list"></ul>
     <script>
-        // 假设的车牌号码和归属地信息，实际应用中应该从数据库获取
-        const plateData = {
-            "粤": ["粤A 广州", "粤B 深圳", "粤C 珠海"],
-            "苏": ["苏A 南京", "苏B 无锡", "苏C 徐州"],
-            // ... 其他省份和车牌信息
-            "京": ["京A 北京", "京B 北京", "京C 北京"]
-        };
+        const data = [
+            { text: 'ps2024', link: 'https://www.example.com/1' },
+            { text: 'ps2023', link: 'https://www.example.com/2' },
+            { text: 'AI2024', link: 'https://www.example.com/3' },
+            { text: 'AI2023', link: 'https://www.example.com/4' },
+            { text: 'ID2024', link: 'https://www.example.com/5' },
+        ];
 
-        document.getElementById('plateForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // 阻止表单默认提交行为
-            const plateNumber = document.getElementById('plateNumber').value.toUpperCase(); // 获取输入的车牌号码并转为大写
-            let province = plateNumber.substring(0, 1); // 获取省份简称
-            let result = '';
+        function displayList(items) {
+            const list = document.getElementById('list');
+            list.innerHTML = '';
+            items.forEach(item => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = item.link;
+                a.textContent = item.text;
+                li.appendChild(a);
+                list.appendChild(li);
+            });
+        }
 
-            if (plateData.hasOwnProperty(province)) {
-                const plates = plateData[province];
-                for (let i = 0; i < plates.length; i++) {
-                    if (plates[i].startsWith(plateNumber)) {
-                        result = `车牌 ${plateNumber} 归属地是 ${plates[i].substring(plates[i].indexOf(' ') + 1)}`;
-                        break;
-                    }
-                }
-                if (!result) {
-                    result = '未找到对应的车牌归属地信息';
-                }
-            } else {
-                result = '未知省份';
-            }
+        function search() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const filteredData = data.filter(item => item.text.toLowerCase().includes(input));
+            displayList(filteredData);
+        }
 
-            document.getElementById('result').textContent = result; // 设置查询结果
-        });
+        displayList(data);
     </script>
 </body>
 </html>
